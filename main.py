@@ -134,22 +134,22 @@ while run:
 
     #dummy packets (with radom rssi):
     #beacon_packets = [
-        #['72:84:08:13:03:e8', random.randint(-60, -30)],
-        #['72:84:08:13:03:e2', random.randint(-60, -30)],
-        #['72:84:08:13:03:db', random.randint(-60, -30)],
-        #['72:84:08:13:03:d8', random.randint(-60, -30)]
+        #['72:64:08:13:03:e8', random.randint(-60, -30)],
+        #['72:64:08:13:03:e2', random.randint(-60, -30)],
+        #['72:64:08:13:03:db', random.randint(-60, -30)],
+        #['72:64:08:13:03:d8', random.randint(-60, -30)]
         #]
 
     #1. Beacon packet extraction
     for i in range(len(beacon_packets)): 
         if beacon_packets[i][0] not in existing_beacon:  #1.1. create beacon object
 
-            for key in x_coord:
-                if key is beacon_packets[i][0]:          # !Not Working, WIP
+            for key in x_coord.keys():
+                if key is beacon_packets[i][0]:          #lookup x-coordinate
                     x = x_coord.get(key)
 
-            for key in y_coord:
-                if key == beacon_packets[i][0]:          # !Not Working, WIP
+            for key in y_coord.keys():
+                if key == beacon_packets[i][0]:          #lookup y-coordinate
                     y = y_coord.get(key)
 
             bj = Beacon(beacon_packets[i][0], j,
