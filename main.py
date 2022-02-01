@@ -8,6 +8,21 @@ xk = 0                 #robot position (xk, yk)
 yk = 0    
 robot_pos = [xk, yk]
 
+#table1: bt_addr to x-coordinate
+x_coord = {
+    '72:64:08:13:03:e2' : 0,  #B1
+    '72:64:08:13:03:e8' : 10, #B2
+    '72:64:08:13:03:db' : 0,  #B3
+    '72:64:08:13:03:d8' : 10  
+    }
+
+#table2: bt_addr to y-coordinate
+y_coord = {
+    '72:64:08:13:03:e2' : 0,  #B1
+    '72:64:08:13:03:e8' : 0,  #B2
+    '72:64:08:13:03:db' : 10, #B3
+    '72:64:08:13:03:d8' : 10
+    }
 class Beacon: 
 
     def __init__(self, bt_addr, index, x, y, rssi):  
@@ -30,11 +45,11 @@ class Beacon:
 
     def write_sample(self, sample_rssi):
         self.sample_array.append(sample_rssi)
+        if len(self.sample_array) == 5:                    #limit the number of samples
+            self.sample_array.pop(0) 
 
     def rssi_dist(self, rssi):
-        self.D = 0.016690589*10**(-self.rssi/47.375)       #from RSSI-distance equation          
-        if len(self.sample_array) == 3:                    #limit the number of samples
-            self.sample_array.pop(0)    
+        self.D = 0.016690589*10**(-self.rssi/47.375)       #from RSSI-distance equation             
 
     #initialize kalman variables
     R = 80          #noise covariance
@@ -81,27 +96,14 @@ class Beacon:
         yk = (a*f-c*e)/(a*d-b*c)
 
 
-#table1: bt_addr to x-coordinate
-x_coord = {
-    '72:64:08:13:03:e2' : 0,  #B1
-    '72:64:08:13:03:e8' : 10, #B2
-    '72:64:08:13:03:db' : 0,  #B3
-    '72:64:08:13:03:d8' : 10  
-    }
-
-#table2: bt_addr to y-coordinate
-y_coord = {
-    '72:64:08:13:03:e2' : 0,  #B1
-    '72:64:08:13:03:e8' : 0,  #B2
-    '72:64:08:13:03:db' : 10, #B3
-    '72:64:08:13:03:d8' : 10
-    }
-
 #link bt_addr & object index   
 existing_beacon = {}
 
 #link rssi & object index
 rssi_comp = {}
+
+#store the 3 beacons for triangulation 
+tri_beacons = []           
 
 run = True
 while run:
@@ -131,10 +133,12 @@ while run:
                        y_coord.get(key), 
                        beacon_packets[i][1])
 
-            existing_beacon[str(bj.bt_addr)] = bj        #link existing beacons to object bj
+            bj.write_sample(beacon_packets[i][1])
+
+            existing_beacon[ bj.bt_addr ] = bj           #link existing beacons to object bj
             rssi_comp[ bj.rssi ] = bj                    #link object rssi to object bj
             bj.print_beacon()
-            j = j+1                                      #index counter
+            j = j+1                                      #index counter ++ after creating one object 
 
         else:                                            #1.2. update beacon object 
 
@@ -142,21 +146,20 @@ while run:
                 if u == beacon_packets[i][0]:
                     existing_beacon.get(u).write_sample(beacon_packets[i][1])
 
-
     #2. Kalman filter  
 
                     existing_beacon.get(u).kalman_call()
                     existing_beacon.get(u).reset_kalman()
+
+                    rssi_comp[ existing_beacon.get(u).rssi ] = existing_beacon.get(u)
                     existing_beacon.get(u).print_beacon()
 
     #print('existing beacon :', existing_beacon)          #shows the memory locations of existing objects
-
+    print('RSSI_comp :', rssi_comp)
 
     #3. Sorting the cloest three beacons
 
     L = list(rssi_comp.keys())                           #extract rssi keys from dictionary for sorting
-
-    #print('RSSI list :', rssi_comp)
 
     #temp storing variables
     m = -1000   #the largest
@@ -166,7 +169,6 @@ while run:
     L.sort(reverse = True)
     print("L :", L)
 
-    tri_beacons = []                #store the 3 beacons for triangulation 
 
     for i in range(len(L)):
         if L[i] >= m:
@@ -211,9 +213,11 @@ while run:
                          #tri_beacons[0].D,
                          #tri_beacons[1].D,
                          #tri_beacons[2].D)
+    rssi_comp.clear()
+    tri_beacons.clear()
+    L.clear()
 
-    print('robot position :')
-    print(robot_pos)
+    print('---------------------------------')
 
     time.sleep(3)
 
