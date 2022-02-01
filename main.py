@@ -178,7 +178,7 @@ while run:
                     existing_beacon.get(u).print_beacon()
 
     #print('existing beacon :', existing_beacon)          #shows the memory locations of existing objects
-    print('RSSI_comp :', rssi_comp)
+    #print('RSSI_comp :', rssi_comp)
 
     #3. Sorting the cloest three beacons
 
@@ -190,8 +190,7 @@ while run:
     t = -1000   #the third largest
 
     L.sort(reverse = True)
-    print("L :", L)
-
+    #print("L :", L)
 
     for i in range(len(L)):
         if L[i] >= m:
@@ -230,12 +229,13 @@ while run:
 
 
     #5. Triangulation
-    #Beacon.triangulation(tri_beacons[0].x, tri_beacons[0].y,
-                         #tri_beacons[1].x, tri_beacons[1].y,
-                         #tri_beacons[2].x, tri_beacons[2].y,
-                         #tri_beacons[0].D,
-                         #tri_beacons[1].D,
-                         #tri_beacons[2].D)
+    Beacon.triangulation(tri_beacons[0].x, tri_beacons[0].y,
+                         tri_beacons[1].x, tri_beacons[1].y,
+                         tri_beacons[2].x, tri_beacons[2].y,
+                         tri_beacons[0].D,
+                         tri_beacons[1].D,
+                         tri_beacons[2].D)
+    
     rssi_comp.clear()
     tri_beacons.clear()
     L.clear()
