@@ -46,6 +46,7 @@ y_coord = {
     '72:64:08:13:03:db' : 10, #B3
     '72:64:08:13:03:d8' : 10
     }
+
 class Beacon: 
 
     def __init__(self, bt_addr, index, x, y, rssi):  
@@ -177,12 +178,12 @@ while run:
                     rssi_comp[ existing_beacon.get(u).rssi ] = existing_beacon.get(u)
                     existing_beacon.get(u).print_beacon()
 
-    #print('existing beacon :', existing_beacon)          #shows the memory locations of existing objects
+    #print('existing beacon :', existing_beacon)      #shows the memory locations of existing objects
     #print('RSSI_comp :', rssi_comp)
 
     #3. Sorting the cloest three beacons
 
-    L = list(rssi_comp.keys())                           #extract rssi keys from dictionary for sorting
+    L = list(rssi_comp.keys())                        #extract rssi keys for sorting
 
     #temp storing variables
     m = -1000   #the largest
