@@ -1,5 +1,28 @@
 import random
 import time
+import signal
+from beacontools.scanner import Monitor, HCIVersion
+
+beacon_packets = []
+
+def callback(bt_addr, rssi, packet, additional_info):
+    print("<%s, %d> %s %s" % (bt_addr, rssi, packet, additional_info))
+    beacon_packets.append([bt_addr , rssi])
+    print(beacon_packet)
+    beacon.clear()
+    print(' ')
+
+monitor = Monitor(callback,
+                  bt_device_id = 0,
+                  device_filter = None,
+                  packet_filter = None,
+                  scan_parameters= {}
+                  )
+
+monitor.get_hci_version = lambda: HCIVersion.BT_CORE_SPEC_4_2
+monitor.start()
+
+signal.pause()
 
 #0. initialization (global variables)
 
@@ -108,13 +131,13 @@ tri_beacons = []
 run = True
 while run:
 
-    #incoming packets (with radom rssi):
-    beacon_packets = [
-        ['72:84:08:13:03:e8', random.randint(-60, -30)],
-        ['72:84:08:13:03:e2', random.randint(-60, -30)],
-        ['72:84:08:13:03:db', random.randint(-60, -30)],
-        ['72:84:08:13:03:d8', random.randint(-60, -30)]
-        ]
+    #dummy packets (with radom rssi):
+    #beacon_packets = [
+        #['72:84:08:13:03:e8', random.randint(-60, -30)],
+        #['72:84:08:13:03:e2', random.randint(-60, -30)],
+        #['72:84:08:13:03:db', random.randint(-60, -30)],
+        #['72:84:08:13:03:d8', random.randint(-60, -30)]
+        #]
 
     #1. Beacon packet extraction
     for i in range(len(beacon_packets)): 
