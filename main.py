@@ -8,7 +8,7 @@ beacon_packets = []
 def callback(bt_addr, rssi, packet, additional_info):
     print("<%s, %d> %s %s" % (bt_addr, rssi, packet, additional_info))
     beacon_packets.append([bt_addr , rssi])
-    print(beacon_packet)
+    print(beacon_packets)
     beacon.clear()
     print(' ')
 
@@ -240,6 +240,7 @@ while run:
     tri_beacons.clear()
     L.clear()
 
+    print('robot position', robot_pos)
     print('---------------------------------')
 
     time.sleep(3)
