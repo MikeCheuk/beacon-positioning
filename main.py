@@ -12,6 +12,7 @@ def callback(bt_addr, rssi, packet, additional_info):
     beacon.clear()
     print(' ')
 
+#scan from all beacons
 monitor = Monitor(callback,
                   bt_device_id = 0,
                   device_filter = None,
@@ -206,11 +207,9 @@ while run:
     for u in rssi_comp:
         if u == m:
             tri_beacons.append(rssi_comp.get(u))
-
     for u in rssi_comp:
         if u == n:
             tri_beacons.append(rssi_comp.get(u))
-
     for u in rssi_comp:
         if u == t:
             tri_beacons.append(rssi_comp.get(u))
