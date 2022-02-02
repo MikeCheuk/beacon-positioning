@@ -179,8 +179,6 @@ while run:
                     rssi_comp[ existing_beacon.get(u).rssi ] = existing_beacon.get(u)
                     existing_beacon.get(u).print_beacon()
 
-    #print('existing beacon :', existing_beacon)      #shows the memory locations of existing objects
-    #print('RSSI_comp :', rssi_comp)
 
     #3. Sorting the cloest three beacons
 
