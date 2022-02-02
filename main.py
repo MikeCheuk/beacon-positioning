@@ -146,16 +146,16 @@ while run:
         if beacon_packets[i][0] not in existing_beacon:  #1.1. create beacon object
 
             for key in x_coord.keys():
-                if key is beacon_packets[i][0]:          #lookup x-coordinate
-                    x = x_coord.get(key)
+                if key is beacon_packets[i][0]:           
+                    xi = x_coord.get(key)
 
             for key in y_coord.keys():
-                if key == beacon_packets[i][0]:          #lookup y-coordinate
-                    y = y_coord.get(key)
+                if key == beacon_packets[i][0]:          
+                    yi = y_coord.get(key)
 
             bj = Beacon(beacon_packets[i][0], j,
-                       x_coord.get(key), 
-                       y_coord.get(key), 
+                       xi, 
+                       yi, 
                        beacon_packets[i][1])
 
             bj.write_sample(beacon_packets[i][1])
@@ -242,7 +242,8 @@ while run:
 
     print('robot position', xk, yk)
     print('---------------------------------')
-
+    
+    #interval
     time.sleep(3)
 
 
