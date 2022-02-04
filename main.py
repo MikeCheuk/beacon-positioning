@@ -146,7 +146,7 @@ while run:
         if beacon_packets[i][0] not in existing_beacon:  #1.1. create beacon object
 
             for key in x_coord.keys():
-                if key is beacon_packets[i][0]:           
+                if key == beacon_packets[i][0]:           
                     xi = x_coord.get(key)
 
             for key in y_coord.keys():
