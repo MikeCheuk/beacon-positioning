@@ -7,20 +7,18 @@ def callback(bt_addr, rssi, packet, additional_info):
     print(beacon_packets)
     beacon.clear()
     print(' ')
-
+    
+#scan from all beacons
+monitor = Monitor(callback,
+                  bt_device_id = 0,
+                  device_filter = None,
+                  packet_filter = None,
+                  scan_parameters= {}
+                 )
 
 def main():
-    #scan from all beacons
-    monitor = Monitor(callback,
-                      bt_device_id = 0,
-                      device_filter = None,
-                      packet_filter = None,
-                      scan_parameters= {}
-                      )
-
     monitor.get_hci_version = lambda: HCIVersion.BT_CORE_SPEC_4_2
     monitor.start()
-
     signal.pause()
 
 
