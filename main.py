@@ -97,10 +97,10 @@ class Beacon:
         yk = (a*f-c*e)/(a*d-b*c)
 
 
-#link bt_addr & object index   
+#link bt_addr & object   
 existing_beacon = {}
 
-#link rssi & object index
+#link rssi & object 
 rssi_comp = {}
 
 #store the 3 beacons for triangulation 
@@ -110,12 +110,12 @@ run = True
 while run:
 
     #dummy packets (with radom rssi):
-    #beacon_packets = [
-        #['72:64:08:13:03:e8', random.randint(-60, -30)],
-        #['72:64:08:13:03:e2', random.randint(-60, -30)],
-        #['72:64:08:13:03:db', random.randint(-60, -30)],
-        #['72:64:08:13:03:d8', random.randint(-60, -30)]
-        #]
+    beacon_packets = [
+        ['72:64:08:13:03:e8', random.randint(-80, -30)],
+        ['72:64:08:13:03:e2', random.randint(-80, -30)],
+        ['72:64:08:13:03:db', random.randint(-80, -30)],
+        ['72:64:08:13:03:d8', random.randint(-80, -30)]
+        ]
 
     #1. Beacon packet extraction
     for i in range(len(beacon_packets)): 
@@ -156,7 +156,7 @@ while run:
                     existing_beacon.get(u).print_beacon()
 
 
-    #3. Sorting the cloest three beacons
+    #3. Sorting the closest three beacons 
 
     L = list(rssi_comp.keys())                        #extract rssi keys for sorting
 
