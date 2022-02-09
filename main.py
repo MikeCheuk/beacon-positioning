@@ -123,15 +123,15 @@ while run:
 
             for key in x_coord.keys():
                 if key == beacon_packets[i][0]:           
-                    xi = x_coord.get(key)
+                    beacon_x = x_coord.get(key)
 
             for key in y_coord.keys():
                 if key == beacon_packets[i][0]:          
-                    yi = y_coord.get(key)
+                    beacon_y = y_coord.get(key)
 
             bj = Beacon(beacon_packets[i][0], j,
-                       xi, 
-                       yi, 
+                       beacon_x, 
+                       beacon_y, 
                        beacon_packets[i][1])
 
             bj.write_sample(beacon_packets[i][1])
@@ -168,15 +168,9 @@ while run:
     L.sort(reverse = True)
     #print("L :", L)
 
-    for i in range(len(L)):
-        if L[i] >= m:
-            m = L[i]     
-        elif L[i] >= n:
-            n = L[i]
-        elif L[i] >= t:
-            t = L[i]
-        else:
-            continue
+    m = L[0]
+    n = L[1]
+    t = L[2]
 
     for u in rssi_comp:
         if u == m:
