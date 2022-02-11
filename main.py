@@ -3,7 +3,7 @@ import time
 import signal
 from beacontools.scanner import Monitor, HCIVersion
 
-#0. initialization (global variables)
+#Initialization (global variables)
 
 j = 0                  #beacon index (ie:bj)
 xk = 0                 #robot position (xk, yk)
@@ -12,7 +12,7 @@ robot_pos = [xk, yk]
 packet_size = 15
 sample_size = 5
 
-#beacontools driver
+#0. beacontools driver
 def callback(bt_addr, rssi, packet, additional_info):
     print("<%s, %d> %s %s" % (bt_addr, rssi, packet, additional_info))
     beacon_packets.append([bt_addr , rssi])
@@ -140,14 +140,6 @@ time.sleep(3)
 
 run = True
 while run:
-
-    #dummy packets (with radom rssi):
-    beacon_packets = [
-        ['72:64:08:13:03:e8', random.randint(-80, -30)],
-        ['72:64:08:13:03:e2', random.randint(-80, -30)],
-        ['72:64:08:13:03:db', random.randint(-80, -30)],
-        ['72:64:08:13:03:d8', random.randint(-80, -30)]
-        ]
 
     #1. Beacon packet extraction
     for i in range(len(beacon_packets)): 
