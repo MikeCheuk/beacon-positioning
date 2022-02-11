@@ -104,7 +104,11 @@ existing_beacon = {}
 rssi_comp = {}
 
 #store the 3 beacons for triangulation 
-tri_beacons = []           
+tri_beacons = [] 
+
+#time delay for initializing
+print('Initializing... Please wait... ')
+time.sleep(3)
 
 run = True
 while run:
@@ -212,6 +216,6 @@ while run:
     print('---------------------------------')
     
     #interval
-    time.sleep(3)
+    time.sleep(0.9)
 
 
