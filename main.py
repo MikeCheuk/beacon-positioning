@@ -12,6 +12,15 @@ robot_pos = [xk, yk]
 packet_size = 15
 sample_size = 5
 
+#link bt_addr & object   
+existing_beacon = {}
+
+#link rssi & object 
+rssi_comp = {}
+
+#store the 3 beacons for triangulation 
+tri_beacons = [] 
+
 #0. beacontools driver
 def callback(bt_addr, rssi, packet, additional_info):
     print("<%s, %d> %s %s" % (bt_addr, rssi, packet, additional_info))
@@ -120,15 +129,6 @@ class Beacon:
         xk = (e*d-b*f)/(a*d-b*c)
         yk = (a*f-c*e)/(a*d-b*c)
 
-
-#link bt_addr & object   
-existing_beacon = {}
-
-#link rssi & object 
-rssi_comp = {}
-
-#store the 3 beacons for triangulation 
-tri_beacons = [] 
 
 #time delay for initializing
 print('Initializing... Please wait... ')
