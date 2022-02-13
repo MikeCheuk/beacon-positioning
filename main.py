@@ -1,4 +1,4 @@
-import random
+import threading
 import time
 import signal
 from beacontools.scanner import Monitor, HCIVersion
