@@ -179,11 +179,6 @@ while run:
 
     L = list(rssi_comp.keys())                        #extract rssi keys for sorting
 
-    #temp storing variables
-    m = -1000   #the largest
-    n = -1000   #the second largest
-    t = -1000   #the third largest
-
     L.sort(reverse = True)
     #print("L :", L)
 
