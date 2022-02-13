@@ -155,12 +155,12 @@ while run:
 
             bj.write_sample(beacon_packets[i][1])
 
-            existing_beacon[ bj.bt_addr ] = bj           #link existing beacons to object bj
-            rssi_comp[ bj.rssi ] = bj                    #link object rssi to object bj
+            existing_beacon[ bj.bt_addr ] = bj          #link existing beacons to object bj
+            rssi_comp[ bj.rssi ] = bj                   #link object rssi to object bj
             bj.print_beacon()
-            j = j+1                                      #index counter ++ after creating one object 
+            j = j+1                                     #index counter ++ after creating object 
 
-        else:                                            #1.2. update beacon object 
+        else:                                           #1.2. update beacon object 
 
             for u in existing_beacon:
                 if u == beacon_packets[i][0]:
@@ -175,12 +175,12 @@ while run:
                     existing_beacon.get(u).print_beacon()
 
 
-    #3. Sorting the closest three beacons 
+    #3. Sorting the cloest three beacons
 
     L = list(rssi_comp.keys())                        #extract rssi keys for sorting
 
     L.sort(reverse = True)
-    #print("L :", L)
+    print("L :", L)
 
     m = L[0]
     n = L[1]
@@ -189,9 +189,11 @@ while run:
     for u in rssi_comp:
         if u == m:
             tri_beacons.append(rssi_comp.get(u))
+
     for u in rssi_comp:
         if u == n:
             tri_beacons.append(rssi_comp.get(u))
+
     for u in rssi_comp:
         if u == t:
             tri_beacons.append(rssi_comp.get(u))
@@ -217,18 +219,14 @@ while run:
                          tri_beacons[0].D,
                          tri_beacons[1].D,
                          tri_beacons[2].D)
-    
-    #clear all temp storage
+
     rssi_comp.clear()
     tri_beacons.clear()
     L.clear()
-    
-    #update robot position
-    robot_pos = [xk, yk]
-    print('robot position ', robot_pos)
-    print('---------------------------------')
-    
-    #interval
-    time.sleep(0.9)
 
+    robot_pos = [xk, yk]
+    print('robot position: ', robot_pos)
+    print('---------------------------------')
+
+    time.sleep(1)
 
