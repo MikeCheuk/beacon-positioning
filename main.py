@@ -8,7 +8,6 @@ from beacontools.scanner import Monitor, HCIVersion
 j = 0                  #beacon index (ie:bj)
 xk = 0                 #robot position (xk, yk)
 yk = 0    
-robot_pos = [xk, yk]
 packet_size = 15
 sample_size = 5
 
@@ -104,7 +103,6 @@ class Beacon:
             self.temp.append(self.kalman_filter(self.sample_array[i]))  
 
         self.rssi = self.temp[-1]
-        print('corrected RSSI = ' + str(self.rssi))
         self.temp.clear()
 
     def reset_kalman(self):
@@ -225,11 +223,14 @@ while run:
                          tri_beacons[1].D,
                          tri_beacons[2].D)
     
+    #clear all temp storage
     rssi_comp.clear()
     tri_beacons.clear()
     L.clear()
-
-    print('robot position', xk, yk)
+    
+    #update robot position
+    robot_pos = [xk, yk]
+    print('robot position ', robot_pos)
     print('---------------------------------')
     
     #interval
