@@ -1,6 +1,8 @@
 import random
 import time
 import threading
+import signal
+from beacontools.scanner import Monitor, HCIVersion
 
 #0. initialization (global variables)
 
@@ -9,6 +11,9 @@ yk = 0
 run = True
 first_time = True
 sample_size = 5
+packet_size = 20
+t1 = 2                #time delay for thread1 (create/update object)
+t2 = 4                #time delay for thread2 (positioning)
 
 #link bt_addr & object index   
 existing_beacon = {}
@@ -107,9 +112,26 @@ class Beacon:
         yk = (a*f-c*e)/(a*d-b*c)
 
 
+def callback(bt_addr, rssi, packet, additional_info):
+    print("<%s, %d> %s %s" % (bt_addr, rssi, packet, additional_info))
+    beacon_packets.append([bt_addr , rssi])
+    print(beacon_packets)
+    print(' ')    
+    if len(beacon_packets) == packet_size:
+        beacon_packets.pop(0)
+        
+#scan from all beacons
+monitor = Monitor(callback,
+                  bt_device_id = 0,
+                  device_filter = None,
+                  packet_filter = None,
+                  scan_parameters= {}
+                 )  
+  
 def create_update_beacon():
     
-    j=0
+    #beacon index (ie: bj)
+    j=0 
 
     while run:
 
@@ -133,7 +155,7 @@ def create_update_beacon():
                 bj.write_sample(beacon_packets[i][1])
 
                 existing_beacon[ bj.bt_addr ] = bj          #link existing beacons to object bj
-                rssi_comp[ bj.rssi ] = bj                   #link object rssi to object bj
+                rssi_comp[ bj ] = bj.rssi                   #link object rssi to object bj
                 bj.print_beacon()
                 j = j+1                                     #index counter ++ after creating object 
 
@@ -148,48 +170,34 @@ def create_update_beacon():
                     existing_beacon.get(u).kalman_call()
                     existing_beacon.get(u).reset_kalman()
 
-                    if existing_beacon.get(u) not in rssi_comp.values():
+                    if existing_beacon.get(u) not in rssi_comp.keys():
                         
-                        rssi_comp[ existing_beacon.get(u).rssi ] = existing_beacon.get(u)
+                        rssi_comp[ existing_beacon.get(u) ] = existing_beacon.get(u).rssi
                     else:
-                        temp = { existing_beacon.get(u).rssi : existing_beacon.get(u) }
-                        temp.update(rssi_comp)
-                        temp.clear()
-                    
+                        rssi_comp[ existing_beacon.get(u) ] = existing_beacon.get(u).rssi
+
                     existing_beacon.get(u).print_beacon()
 
-        print(rssi_comp)
-        time.sleep(1)
+        time.sleep(t1)
 
 
 def positioning():
 
     while run:
         #3. Sorting the cloest three beacons
+        print('rssi_comp ' ,rssi_comp)
+        print(' ')
 
-        L = list(rssi_comp.keys())                        #extract rssi keys for sorting
+        L = list(rssi_comp.values())                        #extract rssi keys for sorting
 
         L.sort(reverse = True)
         print("L :", L)
 
-        m = L[0]
-        n = L[1]
-        t = L[2]
-
-        for u in rssi_comp:
-            if u == m:
-                tri_beacons.append(rssi_comp.get(u))
-
-        for u in rssi_comp:
-            if u == n:
-                tri_beacons.append(rssi_comp.get(u))
-
-        for u in rssi_comp:
-            if u == t:
-                tri_beacons.append(rssi_comp.get(u))
+        tri_beacons.append( list(rssi_comp.keys())[list(rssi_comp.values()).index(L[0])] )
+        tri_beacons.append( list(rssi_comp.keys())[list(rssi_comp.values()).index(L[1])] )
+        tri_beacons.append( list(rssi_comp.keys())[list(rssi_comp.values()).index(L[2])] )
 
         print('tri beacons :', tri_beacons)
-
 
         #4. RSSI-distance conversion
 
@@ -218,20 +226,27 @@ def positioning():
         print('robot position: ', robot_pos)
         print('---------------------------------')
 
-        time.sleep(3)
+        time.sleep(t2)
+
 
 #threading
+monitor.get_hci_version = lambda: HCIVersion.BT_CORE_SPEC_4_2
+monitor.start()
+signal.pause()
+
 create_update_thread = threading.Thread(target = create_update_beacon)
 create_update_thread.start()
 
 #initializing delay
-time.sleep(3)
+print('Initializing... Please wait... ')
+time.sleep(5)
 
 tri_thread = threading.Thread(target = positioning)
 tri_thread.start()
 
 create_update_thread.join()
 tri_thread.join()
+
 
 
 
