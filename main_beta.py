@@ -169,12 +169,7 @@ def create_update_beacon():
 
                     existing_beacon.get(u).kalman_call()
                     existing_beacon.get(u).reset_kalman()
-
-                    if existing_beacon.get(u) not in rssi_comp.keys():
-                        
-                        rssi_comp[ existing_beacon.get(u) ] = existing_beacon.get(u).rssi
-                    else:
-                        rssi_comp[ existing_beacon.get(u) ] = existing_beacon.get(u).rssi
+                    rssi_comp[ existing_beacon.get(u) ] = existing_beacon.get(u).rssi
 
                     existing_beacon.get(u).print_beacon()
 
