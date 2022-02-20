@@ -97,19 +97,19 @@ class Beacon:
         X_hat = -30     
         K = 0          
 
-    def triangulation(x1, y1, x2, y2, x3, y3, D1, D2, D3):
-        global xk
-        global yk
-        
-        a = 2*(x2-x1)
-        b = 2*(y2-y1)
-        c = 2*(x3-x2)
-        d = 2*(y3-y2)
-        e = D1**2-D2**2-(x1**2-x2**2+y1**2-y2**2)
-        f = D2**2-D3**2-(x2**2-x3**2+y2**2-y3**2)
+def triangulation(x1, y1, x2, y2, x3, y3, D1, D2, D3):
+    global xk
+    global yk
 
-        xk = (e*d-b*f)/(a*d-b*c)
-        yk = (a*f-c*e)/(a*d-b*c)
+    a = 2*(x2-x1)
+    b = 2*(y2-y1)
+    c = 2*(x3-x2)
+    d = 2*(y3-y2)
+    e = D1**2-D2**2-(x1**2-x2**2+y1**2-y2**2)
+    f = D2**2-D3**2-(x2**2-x3**2+y2**2-y3**2)
+
+    xk = (e*d-b*f)/(a*d-b*c)
+    yk = (a*f-c*e)/(a*d-b*c)
 
 
 def callback(bt_addr, rssi, packet, additional_info):
@@ -206,12 +206,12 @@ def positioning():
 
 
         #5. Triangulation
-        Beacon.triangulation(tri_beacons[0].x, tri_beacons[0].y,
-                             tri_beacons[1].x, tri_beacons[1].y,
-                             tri_beacons[2].x, tri_beacons[2].y,
-                             tri_beacons[0].D,
-                             tri_beacons[1].D,
-                             tri_beacons[2].D)
+        triangulation(tri_beacons[0].x, tri_beacons[0].y,
+                      tri_beacons[1].x, tri_beacons[1].y,
+                      tri_beacons[2].x, tri_beacons[2].y,
+                      tri_beacons[0].D,
+                      tri_beacons[1].D,
+                      tri_beacons[2].D)
 
         rssi_comp.clear()
         tri_beacons.clear()
