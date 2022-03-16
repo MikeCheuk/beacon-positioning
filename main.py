@@ -15,6 +15,8 @@ packet_size = 20
 t1 = 2                #time delay for thread1 (create/update object)
 t2 = 4                #time delay for thread2 (positioning)
 
+beacon_packets = []
+
 #link bt_addr & object index   
 existing_beacon = {}
 
