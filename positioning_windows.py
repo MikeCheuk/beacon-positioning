@@ -1,21 +1,22 @@
+from pathfinding.core.grid import Grid
+from pathfinding.finder.a_star import AStarFinder
+from pathfinding.core.diagonal_movement import DiagonalMovement
 import random
 import time
 import threading
-import signal
-from beacontools.scanner import Monitor, HCIVersion
+
 
 #0. initialization (global variables)
 
-xk = 0                 #robot position (xk, yk)
-yk = 0    
+xk, yk = 0, 0         #robot position 
+xe, ye = 6, 5         #destination position
+
 run = True
 first_time = True
 sample_size = 5
-packet_size = 20
-t1 = 2                #time delay for thread1 (create/update object)
-t2 = 4                #time delay for thread2 (positioning)
-
-beacon_packets = []
+packet_size = 15
+t2 = 2                #time delay for thread2 (create/update object)
+t3 = 6                #time delay for thread3 (positioning)
 
 #link bt_addr & object index   
 existing_beacon = {}
@@ -41,6 +42,25 @@ y_coord = {
     '72:64:08:13:03:db' : 1,   
     '72:64:08:13:03:d8' : 1
     }
+
+# 0 : obstacle  
+# 1 : free passage
+map_matrix = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]
+
+#create a grid from map_matrix
+grid = Grid(matrix = map_matrix)
 
 class Beacon: 
 
@@ -102,7 +122,7 @@ class Beacon:
 def triangulation(x1, y1, x2, y2, x3, y3, D1, D2, D3):
     global xk
     global yk
-
+        
     a = 2*(x2-x1)
     b = 2*(y2-y1)
     c = 2*(x3-x2)
@@ -110,32 +130,46 @@ def triangulation(x1, y1, x2, y2, x3, y3, D1, D2, D3):
     e = D1**2-D2**2-(x1**2-x2**2+y1**2-y2**2)
     f = D2**2-D3**2-(x2**2-x3**2+y2**2-y3**2)
 
-    xk = (e*d-b*f)/(a*d-b*c)
-    yk = (a*f-c*e)/(a*d-b*c)
+    xk = round(10*(e*d-b*f)/(a*d-b*c))                      #multiply 10 to scale up xk, yk, round to integers
+    yk = round(10*(a*f-c*e)/(a*d-b*c))
 
+def path_find(xs, ys):
 
-def callback(bt_addr, rssi, packet, additional_info):
-    print("<%s, %d> %s %s" % (bt_addr, rssi, packet, additional_info))
-    beacon_packets.append([bt_addr , rssi])
-    print(beacon_packets)
-    print(' ')    
-    if len(beacon_packets) == packet_size:
-        beacon_packets.pop(0)
-        
-#scan from all beacons
-monitor = Monitor(callback,
-                  bt_device_id = 0,
-                  device_filter = None,
-                  packet_filter = None,
-                  scan_parameters= {}
-                 )  
-  
+    global first_time
+
+    if first_time == True:
+        #starting & ending position
+        start = grid.node(xs, ys)
+        end = grid.node(xe,ye)
+
+        #create A* path finder
+        finder = AStarFinder(diagonal_movement = DiagonalMovement.always)
+
+        #use finder to find path
+        path, runs = finder.find_path(start, end, grid)
+
+        first_time = False
+
+    else:
+
+        path = ('[ (',xe, ye, ') ]')
+ 
+    print(path)
+
 def create_update_beacon():
     
     #beacon index (ie: bj)
     j=0 
 
     while run:
+
+        #testing packets (with radom rssi):
+        beacon_packets = [
+            ['72:64:08:13:03:e2', random.randint(-37, -30)],
+            ['72:64:08:13:03:e8', random.randint(-79, -76)],
+            ['72:64:08:13:03:db', random.randint(-79, -76)],
+            ['72:64:08:13:03:d8', random.randint(-92, -90)]
+            ]
 
         #1. Beacon packet extraction
         for i in range(len(beacon_packets)): 
@@ -175,7 +209,7 @@ def create_update_beacon():
 
                     existing_beacon.get(u).print_beacon()
 
-        time.sleep(t1)
+        time.sleep(t2)
 
 
 def positioning():
@@ -214,7 +248,7 @@ def positioning():
                       tri_beacons[0].D,
                       tri_beacons[1].D,
                       tri_beacons[2].D)
-
+        
         rssi_comp.clear()
         tri_beacons.clear()
         L.clear()
@@ -222,15 +256,13 @@ def positioning():
         robot_pos = [xk, yk]
         print('robot position: ', robot_pos)
         print('---------------------------------')
+        
+        path_find(xk, yk)   
 
-        time.sleep(t2)
+        time.sleep(t3)
 
 
 #threading
-monitor.get_hci_version = lambda: HCIVersion.BT_CORE_SPEC_4_2
-monitor.start()
-signal.pause()
-
 create_update_thread = threading.Thread(target = create_update_beacon)
 create_update_thread.start()
 
