@@ -1,6 +1,6 @@
 ![](image/beacon_positioning.png)
 # Indoor Positioning System for Autonomous Robots 
-
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/3) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/MikeCheuk/beacon_positioning)
 ###### *An EE final year student project bringing RSSI-based triangulation theory into a software application.* 
 ###### - The software is a proof of concept rather than a practical application as the accuracy of RSSI-distance conversion requires refinement. 
 ###### - The main.py is an all-in-one file containing all functionalities, though it may be tuned to your own liking. 
@@ -25,9 +25,14 @@ The algorithm read packets from all nearby ibeacons using **beacontools** by cit
     # install beacontools with scanning support
     pip3 install beacontools[scan]
 
+(Opt) The additional path planning algorithm depends on another module **path_finding**, which can be installed via:
+
+    pip3 install path_finding
+    
 The installation of this software can be achieved by:
 
     #install beacon_positioning
+    pip3 install threading
     pip3 install beacon_positioning
   
 ## Usage
