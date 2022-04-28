@@ -43,7 +43,7 @@ The following parameters are free to be modified:
     def rssi_dist(self, rssi):
     self.D = 0.016690589*10**(-self.rssi/47.375)
 
-2.Beacon coordinates hashtable            
+2.Beacon coordinates conversion hashtable            
 
     #table1: bt_addr to x-coordinate
     x_coord = {
@@ -63,7 +63,7 @@ The following parameters are free to be modified:
         #add new bt_addr : beacon_y here
         }
         
-3.Repeating intervals for threading
+3.Repeating intervals for threading (in sec)
 
     t2 = 2                #for thread2 (create/update object)
     t3 = 6                #for thread3 (positioning)    
