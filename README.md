@@ -16,7 +16,7 @@ Objective - To develop a wireless positioning & navigation software for autonomo
 - Implemented A* path planning, obstacle sensing & motion control algorithms
 
 ## Installation
-The algorithm read packets from all nearby ibeacons using **beacontools** by citruz, which can be installed via:
+The algorithm read packets from all nearby ibeacons using [**beacontools**](https://github.com/citruz/beacontools) by citruz, which can be installed via:
 
     # install libbluetooth headers and libpcap2
     sudo apt-get install python3-dev libbluetooth-dev libcap2-bin
@@ -25,7 +25,7 @@ The algorithm read packets from all nearby ibeacons using **beacontools** by cit
     # install beacontools with scanning support
     pip3 install beacontools[scan]
 
-(Opt) The additional path planning algorithm depends on another module **path_finding**, which can be installed via:
+(Opt) The additional path planning algorithm depends on another module [**pathfinding**](https://github.com/brean/python-pathfinding), which can be installed via:
 
     pip3 install path_finding
     
@@ -36,5 +36,72 @@ The installation of this software can be achieved by:
     pip3 install beacon_positioning
   
 ## Usage
+The following parameters are free to be modified:
 
+1.RSSI-distance formula **(please do your own logarithmic regression)**
 
+    def rssi_dist(self, rssi):
+    self.D = 0.016690589*10**(-self.rssi/47.375)
+
+2.beacon coordinates hashtable            
+
+    #table1: bt_addr to x-coordinate
+    x_coord = {
+        '72:64:08:13:03:e2' : 0,   
+        '72:64:08:13:03:e8' : 1,   
+        '72:64:08:13:03:db' : 0,   
+        '72:64:08:13:03:d8' : 1,
+        #add new bt_addr : beacon_x here
+        }
+
+    #table2: bt_addr to y-coordinate
+    y_coord = {
+        '72:64:08:13:03:e2' : 0,   
+        '72:64:08:13:03:e8' : 0,   
+        '72:64:08:13:03:db' : 1,   
+        '72:64:08:13:03:d8' : 1,
+        #add new bt_addr : beacon_y here
+        }
+        
+3.repeating interval for threading
+
+    t2 = 2                #for thread2 (create/update object)
+    t3 = 6                #for thread3 (positioning)    
+
+4.Kalman filter covariance:
+
+    #initialize kalman variables
+    R = 80          #noise covariance
+    H = 1           #measurement
+    Q = 10          #estimaton covariance
+    P = 0           #error covariance (init=0) 
+    X_hat = -30     #estimated RSSI
+    K = 0           #kalman gain (init=0)
+    
+For **additional path planning:**
+
+5.map matrix
+
+    # 0 : obstacle  
+    # 1 : free passage
+    map_matrix = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ]
+
+6.astar setting
+
+    xk, yk = 0, 0         #robot position 
+    xe, ye = 6, 5         #destination position
+
+## License
+MIT 
