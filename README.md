@@ -43,7 +43,7 @@ The following parameters are free to be modified:
     def rssi_dist(self, rssi):
     self.D = 0.016690589*10**(-self.rssi/47.375)
 
-2.beacon coordinates hashtable            
+2.Beacon coordinates hashtable            
 
     #table1: bt_addr to x-coordinate
     x_coord = {
@@ -63,7 +63,7 @@ The following parameters are free to be modified:
         #add new bt_addr : beacon_y here
         }
         
-3.repeating interval for threading
+3.Repeating intervals for threading
 
     t2 = 2                #for thread2 (create/update object)
     t3 = 6                #for thread3 (positioning)    
@@ -80,7 +80,7 @@ The following parameters are free to be modified:
     
 For **additional path planning:**
 
-5.map matrix
+5.Map matrix
 
     # 0 : obstacle  
     # 1 : free passage
@@ -98,7 +98,7 @@ For **additional path planning:**
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]
 
-6.astar setting
+6.A* setting
 
     xk, yk = 0, 0         #robot position 
     xe, ye = 6, 5         #destination position
