@@ -1,5 +1,5 @@
 ![](image/beacon_positioning.png)
-# Indoor Positioning System for Autonomous Robots 
+# RSSI-based Positioning System for Autonomous Robots 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/3) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/MikeCheuk/beacon_positioning)
 ###### *An EE final year student project bringing RSSI-based triangulation theory into a software application.* 
 ###### - The software is a proof of concept rather than a practical application as the accuracy of RSSI-distance conversion requires refinement. 
