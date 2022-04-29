@@ -77,6 +77,7 @@ The following parameters are free to be modified:
     P = 0           #error covariance (init=0) 
     X_hat = -30     #estimated RSSI
     K = 0           #kalman gain (init=0)
+    sample_size     #how many data for one timestep
     
 For **additional path planning:**
 
