@@ -39,12 +39,13 @@ The installation of this software can be achieved by:
 The following parameters are free to be modified:
 
 1.RSSI-distance formula **(please do your own logarithmic regression)**
-
+```python
     def rssi_dist(self, rssi):
     self.D = 0.016690589*10**(-self.rssi/47.375)
+```
 
 2.Beacon coordinates conversion hashtable            
-
+```python
     #table1: bt_addr to x-coordinate
     x_coord = {
         '72:64:08:13:03:e2' : 0,   
@@ -62,14 +63,16 @@ The following parameters are free to be modified:
         '72:64:08:13:03:d8' : 1,
         #add new bt_addr : beacon_y here
         }
-        
-3.Repeating intervals for threading (in sec)
+```
 
+3.Repeating intervals for threading (in sec)
+```python
     t2 = 2                #for thread2 (create/update object)
     t3 = 6                #for thread3 (positioning)    
+```
 
 4.Kalman filter covariance:
-
+```python
     #initialize kalman variables
     R = 80          #noise covariance
     H = 1           #measurement
@@ -78,11 +81,12 @@ The following parameters are free to be modified:
     X_hat = -30     #estimated RSSI
     K = 0           #kalman gain (init=0)
     sample_size     #how many data for one timestep
-    
+```
+
 For **additional path planning:**
 
 5.Map matrix
-
+```python
     # 0 : obstacle  
     # 1 : free passage
     map_matrix = [
@@ -98,11 +102,14 @@ For **additional path planning:**
         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]
+```
 
 6.A* setting
-
+```python
     xk, yk = 0, 0         #robot position 
     xe, ye = 6, 5         #destination position
+```
+
 ---
 ## License
 MIT 
