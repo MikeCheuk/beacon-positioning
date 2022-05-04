@@ -16,7 +16,7 @@ Objective - To develop a wireless positioning & navigation software for autonomo
 - Implemented A* path planning, obstacle sensing & motion control algorithms
 ---
 ## Installation
-The algorithm read packets from all nearby ibeacons using [**beacontools**](https://github.com/citruz/beacontools) by citruz, which can be installed via:
+The algorithm read packets from all nearby ibeacons using [**beacontools**](https://github.com/citruz/beacontools) by @citruz, which can be installed via:
 
     # install libbluetooth headers and libpcap2
     sudo apt-get install python3-dev libbluetooth-dev libcap2-bin
