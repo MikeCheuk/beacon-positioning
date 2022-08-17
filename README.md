@@ -28,12 +28,7 @@ The algorithm read packets from all nearby ibeacons using [**beacontools**](http
 (Opt) The additional path planning algorithm depends on another module [**pathfinding**](https://github.com/brean/python-pathfinding), which can be installed via:
 
     pip3 install path_finding
-    
-The installation of this software can be achieved by:
 
-    #install beacon_positioning
-    pip3 install threading
-    pip3 install beacon_positioning
 ---  
 ## Usage
 The following parameters are free to be modified:
